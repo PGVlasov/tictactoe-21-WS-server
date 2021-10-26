@@ -17,7 +17,7 @@ webSocketServer.on("connection", (ws, req) => {
     console.log("MSG___", message);
     switch (message.type) {
       case "CONNECTED":
-        connectionHandler(ws, message.payload, message, ws.clientId, ws.roomId);
+        connectionHandler(ws, message.payload, message);
         break;
       case "READYTOPLAY":
         readyToPlay(ws, message.payload, message, msg.myIdToEnemyId);
@@ -35,9 +35,7 @@ connectionHandler = (ws, msg, clientId, roomId) => {
   ws.clientId = msg.clientId;
   ws.roomId = msg.roomId;
   console.log("сюда приходит", msg);
-  webSocketServer.clients.forEach((client) => {
-    client.send(JSON.stringify(msg));
-  });
+  ws.send(JSON.stringify(msg));
   console.log("отправлено");
 };
 

@@ -17,7 +17,7 @@ webSocketServer.on("connection", (ws, req) => {
     console.log("MSG___", message);
     switch (message.type) {
       case "CONNECTED":
-        connectionHandler(ws, message.payload, message, ws.clientId, ws.roomId);
+        connectionHandler(ws, message.payload, message);
         break;
       case "READYTOPLAY":
         readyToPlay(ws, message.payload, message, msg.myIdToEnemyId);

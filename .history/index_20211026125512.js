@@ -17,7 +17,7 @@ webSocketServer.on("connection", (ws, req) => {
     console.log("MSG___", message);
     switch (message.type) {
       case "CONNECTED":
-        connectionHandler(ws, message.payload, message, ws.clientId, ws.roomId);
+        connectionHandler(ws, message.payload, message, msg.myIdToEnemyId);
         break;
       case "READYTOPLAY":
         readyToPlay(ws, message.payload, message, msg.myIdToEnemyId);
@@ -29,16 +29,13 @@ webSocketServer.on("connection", (ws, req) => {
   });
 
   //   ws.on("error", (e) => ws.send(e));
+
+  ws.send("Hi there, I am a WebSocket server");
 });
 
 connectionHandler = (ws, msg, clientId, roomId) => {
   ws.clientId = msg.clientId;
   ws.roomId = msg.roomId;
-  console.log("сюда приходит", msg);
-  webSocketServer.clients.forEach((client) => {
-    client.send(JSON.stringify(msg));
-  });
-  console.log("отправлено");
 };
 
 readyToPlay = (ws, msg, clientId, roomId) => {
@@ -46,10 +43,10 @@ readyToPlay = (ws, msg, clientId, roomId) => {
   //   console.log("WS__CLIENT__ID", ws.clientId);
   //   console.log("WS__ROOM__ID", ws.roomId);
   console.log("сюда что то пришло", msg);
-  //   webSocketServer.clients.forEach((client) => {
-  //     client.send(JSON.stringify(msg));
-  //     console.log("semded", msg);
-  //   });
+  webSocketServer.clients.forEach((client) => {
+    client.send(JSON.stringify(msg));
+    console.log("semded", msg.myIdToEnemyId);
+  });
 };
 
 broadcastToRoom = (clientId, roomId, msg) => {
