@@ -12,10 +12,12 @@ const webSocketServer = new WebSocket.Server({ server });
 webSocketServer.on("connection", (ws) => {
   ws.on("message", (msg) => {
     const message = JSON.parse(msg);
+    //ws.send("wtf");
     console.log("MSG___", message);
     switch (message.type) {
       case "CONNECTED":
         connectionHandler(ws, message);
+        //broadcastToRoom(ws.clientId, ws.roomId, message);
         break;
       case "PLAYER_MOVE":
         console.log("message res", message);
@@ -23,11 +25,15 @@ webSocketServer.on("connection", (ws) => {
         break;
     }
   });
+
+  //   ws.on("error", (e) => ws.send(e));
 });
 
 connectionHandler = (ws, msg) => {
   ws.clientId = msg.payload.clientId;
   ws.roomId = msg.payload.roomId;
+  // console.log("clients", webSocketServer.clients);
+
   webSocketServer.clients.forEach((client) => {
     if (client.roomId === ws.roomId && client.clientId !== ws.clientId) {
       client.send(JSON.stringify(msg));
